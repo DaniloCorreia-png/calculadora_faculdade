@@ -1,17 +1,52 @@
-const soma = (a, b) => a + b;
-const subtração = (a, b) => a - b;
-const multilicação = (a, b) => a * b;
-const divisão = (a, b) => (b !== 0 ? a / b : "Erro: Divisão por zero");
+let valorAtual = '0';
+let primeiroValor = null;
+let operacaoPendente = null;
 
+const display = document.getElementById('display');
 
-function calculadora(num1, num2, operacaoCallback) {
-  console.log("Calculando...");
-  const resultado = operacaoCallback(num1, num2);
-  return resultado;
+const operacoes = {
+    '+': (a, b) => a + b,
+    '-': (a, b) => a - b,
+    '*': (a, b) => a * b,
+    '/': (a, b) => b !== 0 ? a / b : "Erro"
+};
+
+function atualizarDisplay() {
+    display.innerText = valorAtual;
 }
 
+function addNumero(num) {
+    if (valorAtual === '0') valorAtual = num;
+    else valorAtual += num;
+    atualizarDisplay();
+}
 
-console.log("Resultado da Soma:", calculadora(10, 5, soma));
-console.log("Resultado da Subtração:", calculadora(10, 5, subtração));
-console.log("Resultado da Multiplicação:", calculadora(10, 5, multilicação));
-console.log("Resultado da Divisão:", calculadora(10, 2, divisão));
+function prepararOperacao(op) {
+    primeiroValor = parseFloat(valorAtual);
+    operacaoPendente = op;
+    valorAtual = '0';
+}
+
+function calcular() {
+    if (operacaoPendente && primeiroValor !== null) {
+        const segundoValor = parseFloat(valorAtual);
+        const resultado = operacoes[operacaoPendente](primeiroValor, segundoValor);
+        
+        valorAtual = String(resultado);
+        operacaoPendente = null;
+        primeiroValor = null;
+        atualizarDisplay();
+    }
+}
+
+function limpar() {
+    valorAtual = '0';
+    primeiroValor = null;
+    operacaoPendente = null;
+    atualizarDisplay();
+}
+
+function apagar() {
+    valorAtual = valorAtual.slice(0, -1) || '0';
+    atualizarDisplay();
+}
